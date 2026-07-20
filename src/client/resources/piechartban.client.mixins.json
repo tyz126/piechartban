@@ -3,7 +3,7 @@
 	"package": "com.tyz0218.client.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"ExampleClientMixin"
+		"DebugHudMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
