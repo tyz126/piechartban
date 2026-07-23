@@ -5,13 +5,10 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.tyz0218.networking.HandshakeS2CPayload;
@@ -26,7 +23,7 @@ public class PieChartBan implements ModInitializer {
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	public static final Identifier MOD_CHANNEL = Identifier.of(MOD_ID, "handshake");
+	public static final Identifier MOD_CHANNEL = Identifier.fromNamespaceAndPath(MOD_ID, "handshake");
 
 	@Override
 	public void onInitialize() {
@@ -36,18 +33,18 @@ public class PieChartBan implements ModInitializer {
 		//LOGGER.info("Hello Fabric world!");
 		String url = "https://modrinth.com/mod/pie-chart-ban";
 
-		PayloadTypeRegistry.playS2C().register(HandshakeS2CPayload.ID, HandshakeS2CPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(HandshakeS2CPayload.ID, HandshakeS2CPayload.CODEC);
 
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			if (!ServerPlayNetworking.canSend(handler, MOD_CHANNEL)) {
 				server.execute(() -> {
-					handler.disconnect(Text.literal("You must download the Pie Chart Ban mod to join this server!\n").append(Text.literal(url).setStyle(Style.EMPTY.withUnderline(true)).formatted(Formatting.AQUA)));
+					handler.disconnect(Component.literal("You must download the Pie Chart Ban mod to join this server!\n").append(Component.literal(url).setStyle(Style.EMPTY.withUnderlined(true)).withStyle(ChatFormatting.AQUA)));
 				});
 			}
 		});
 	}
 
 	public static Identifier id(String path) {
-		return Identifier.of(MOD_ID, path);
+		return Identifier.fromNamespaceAndPath(MOD_ID, path);
 	}
 }
